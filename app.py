@@ -1,21 +1,19 @@
-import typing as t
-
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 from piccolo_admin.endpoints import create_admin
-from piccolo_api.crud.serializers import create_pydantic_model
 from piccolo.engine import engine_finder
-from starlette.routing import Route, Mount
+from piccolo_api.session_auth.endpoints import session_login, session_logout
+from starlette.authentication import AuthenticationError
+from starlette.requests import Request
+from starlette.responses import RedirectResponse
+from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
 
-from home.endpoints import HomeEndpoint
+from home import endpoints
 from home.piccolo_app import APP_CONFIG
-from home.tables import Task
 
 
 app = FastAPI(
     routes=[
-        Route("/", HomeEndpoint),
         Mount(
             "/admin/",
             create_admin(
@@ -27,49 +25,14 @@ app = FastAPI(
         Mount("/static/", StaticFiles(directory="static")),
     ],
 )
+app.include_router(endpoints.router)
+app.mount("/login/", session_login())
+app.mount("/logout/", session_logout())
 
 
-TaskModelIn: t.Any = create_pydantic_model(table=Task, model_name="TaskModelIn")
-TaskModelOut: t.Any = create_pydantic_model(
-    table=Task, include_default_columns=True, model_name="TaskModelOut"
-)
-
-
-@app.get("/tasks/", response_model=t.List[TaskModelOut])
-async def tasks():
-    return await Task.select().order_by(Task.id)
-
-
-@app.post("/tasks/", response_model=TaskModelOut)
-async def create_task(task_model: TaskModelIn):
-    task = Task(**task_model.dict())
-    await task.save()
-    return task.to_dict()
-
-
-@app.put("/tasks/{task_id}/", response_model=TaskModelOut)
-async def update_task(task_id: int, task_model: TaskModelIn):
-    task = await Task.objects().get(Task.id == task_id)
-    if not task:
-        return JSONResponse({}, status_code=404)
-
-    for key, value in task_model.dict().items():
-        setattr(task, key, value)
-
-    await task.save()
-
-    return task.to_dict()
-
-
-@app.delete("/tasks/{task_id}/")
-async def delete_task(task_id: int):
-    task = await Task.objects().get(Task.id == task_id)
-    if not task:
-        return JSONResponse({}, status_code=404)
-
-    await task.remove()
-
-    return JSONResponse({})
+@app.exception_handler(AuthenticationError)
+async def handle_auth_failure(request: Request, exception: AuthenticationError):
+    return RedirectResponse(url="/login")
 
 
 @app.on_event("startup")

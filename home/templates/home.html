@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="hero">
+        <h1>{{ title }}</h1>
+    </div>
+    <div class="content">
+
+        <section>
+            <h2>Postgres</h2>
+            <p>Make sure you create the database. See the <a href="https://piccolo-orm.readthedocs.io/en/latest/piccolo/getting_started/setup_postgres.html">docs</a> for guidance.</p>
+            <p>See <code>piccolo_conf.py</code> for the database settings.</p>
+        </section>
+
+    </div>
+{% endblock content %}

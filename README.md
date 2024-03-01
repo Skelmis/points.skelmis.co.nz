@@ -1,21 +1,7 @@
-# piccolo_project
+A relatively accurate Air NZ status points tracker.
 
-## Setup
 
-### Install requirements
+##### Known issues
 
-```bash
-pip install -r requirements.txt
-```
-
-### Getting started guide
-
-```bash
-python main.py
-```
-
-### Running tests
-
-```bash
-piccolo tester run
-```
+- Fails to handle leaps years 
+- Might be 1 day wrong on the math
