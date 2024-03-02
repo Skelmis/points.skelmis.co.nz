@@ -7,9 +7,44 @@
     <div class="content">
 
         <section>
-            <h2>Postgres</h2>
-            <p>Make sure you create the database. See the <a href="https://piccolo-orm.readthedocs.io/en/latest/piccolo/getting_started/setup_postgres.html">docs</a> for guidance.</p>
-            <p>See <code>piccolo_conf.py</code> for the database settings.</p>
+            <h2>Current points</h2>
+            <ul>
+                <li>NZ flight points: {{ sum_air_nz }}</li>
+                <li>A* points: {{ sum_a_star }}</li>
+                <li>Other points: {{ sum_other }}</li>
+                <li>Total points: {{ sum_total }}</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Points left to reach goals</h2>
+            <ul>
+                <li>Silver: {{ to_go_silver }}</li>
+                <li>Gold: {{ to_go_gold }}</li>
+                <li>Elite: {{ to_go_elite }}</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Do you have enough points to maintain the tier?</h2>
+            <ul>
+                <li>Silver: {{ maintain_silver }}</li>
+                <li>Gold: {{ maintain_gold }}</li>
+                <li>Elite: {{ maintain_elite }}</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Forecasted</h2>
+            XXX Will get NEXT_TIER at NEXT_TIER_DATE
+            XXX Will lose CURRENT_TIER at CURRENT_TIER_LOSS_DATE. Needs CURRENT_TIER_POINTS_NEEDED to maintain at CURRENT_TIER_LOSS_DATE
+        </section>
+
+        <section>
+            <h2>Misc</h2>
+            View as at date: XXX<br>
+            Wiki on what things mean: XXX<br>
+            Logout: XXX
         </section>
 
     </div>
